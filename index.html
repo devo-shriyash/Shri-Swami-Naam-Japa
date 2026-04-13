@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>नाम जप — श्री स्वामी समर्थ</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d97626">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="नाम जप">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Tiro+Devanagari+Hindi:ital@0;1&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-deep:    #060401;
+      --bg:         #0b0804;
+      --surface:    #131009;
+      --card:       #1a1410;
+      --card-hi:    #221c14;
+      --border:     #261d10;
+      --border-hi:  #3a2c18;
+      --or:         #d97626;
+      --or-bright:  #f09535;
+      --or-pale:    rgba(232,169,96,0.55);
+      --or-dim:     #7a4512;
+      --or-glow:    rgba(232,133,58,0.16);
+      --gold:       #f5c842;
+      --gold-dim:   #c4962a;
+      --text:       #ede0ca;
+      --text-mid:   #a08868;
+      --text-dim:   #5c4830;
+      --text-ghost: #3a2c1c;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg-deep);
+      color: var(--text);
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      overflow: hidden;
+    }
+    body { display: flex; flex-direction: column; }
+
+    /* ═══ HEADER ═══════════════════════════════════════════════ */
+    header {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      position: relative;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 50%;
+      transform: translateX(-50%);
+      width: 200px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--or), transparent);
+    }
+    .hdr-title {
+      font-family: 'Tiro Devanagari Hindi', serif;
+      font-size: 1.35rem;
+      color: var(--or-bright);
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 24px var(--or-pale);
+    }
+    .hdr-sub {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.22em;
+      margin-top: 0.1rem;
+    }
+
+    /* ═══ MAIN ══════════════════════════════════════════════════ */
+    .main {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ═══ JAPA PANEL ════════════════════════════════════════════ */
+    .japa-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2rem 1.2rem;
+      border-right: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .japa-panel::before {
+      content: '';
+      position: absolute;
+      width: 480px; height: 480px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(42,26,8,0.18) 0%, transparent 68%);
+      pointer-events: none;
+      animation: breathe 4.5s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%,100% { transform: scale(1);   opacity: 0.5; }
+      50%      { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Name display */
+    .name-display {
+      font-family: 'Tiro Devanagari Hindi', serif;
+      font-size: 2.2rem;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.25;
+      text-shadow: 0 0 48px rgba(232,133,58,0.35);
+      margin-bottom: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Mala ring */
+    .ring-wrapper {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      cursor: pointer;
+      user-select: none;
+      flex-shrink: 0;
+      z-index: 1;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      will-change: transform;
+      outline: none;
+    }
+    .ring-wrapper:focus-visible {
+      filter: drop-shadow(0 0 8px var(--or-dim));
+    }
+    .ring-svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      display: block;
+    }
+    .ring-track        { fill: none; stroke: var(--border); stroke-width: 0.8; }
+    .bead-unlit        { fill: var(--text-ghost); }
+    .bead-lit          { fill: var(--or-bright); }
+    .bead-sumeru-unlit { fill: var(--gold-dim); opacity: 0.45; }
+    .bead-sumeru-lit   { fill: var(--gold); }
+
+    .ring-center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      pointer-events: none;
+    }
+    .count-number {
+      font-family: 'Inter', 'Tiro Devanagari Hindi', serif;
+      font-size: 3.4rem;
+      font-weight: 700;
+      color: var(--or-bright);
+      line-height: 1;
+      text-shadow: 0 0 24px var(--or-pale);
+    }
+    .count-denom {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      margin-top: 0.18rem;
+      letter-spacing: 0.08em;
+    }
+    .tap-cue {
+      font-size: 0.9rem;
+      color: var(--text-ghost);
+      margin-top: 0.6rem;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    /* Tap animation */
+    .ring-tapped { animation: ring-tap 0.15s ease; }
+    @keyframes ring-tap {
+      0%   { transform: scale(1); }
+      45%  { transform: scale(1.028); }
+      100% { transform: scale(1); }
+    }
+
+    /* Session quick-stats row */
+    .session-row {
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+      margin-top: 1rem;
+      z-index: 1;
+    }
+    .s-stat { text-align: center; }
+    .s-val {
+      font-family: 'Inter', 'Tiro Devanagari Hindi', serif;
+      font-size: 1.7rem;
+      color: var(--or);
+      line-height: 1;
+    }
+    .s-lbl {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 0.2rem;
+      letter-spacing: 0.04em;
+    }
+    .s-sep { width: 1px; height: 1.8rem; background: var(--border-hi); }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+      z-index: 1;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      padding: 0.42rem 1.05rem;
+      border-radius: 30px;
+      border: 1px solid var(--border-hi);
+      background: var(--surface);
+      color: var(--text-mid);
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    .btn:hover { border-color: var(--or-dim); color: var(--text); background: var(--card); }
+    .btn.primary {
+      background: linear-gradient(135deg, var(--or), #9e5010);
+      color: #fff8ee;
+      border-color: transparent;
+    }
+    .btn.primary:hover { opacity: 0.85; }
+
+    .kbd-hint { font-size: 0.72rem; color: var(--text-dim); margin-top: 0.55rem; z-index: 1; text-align: center; }
+
+    /* Manual log */
+    .manual-log {
+      margin-top: 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(24, 17, 10, 0.8);
+      padding: 0.65rem;
+      width: min(640px, 100%);
+      z-index: 1;
+      display: none;
+    }
+    .manual-log.open { display: block; }
+
+    .manual-title {
+      font-size: 0.8rem;
+      color: var(--text-mid);
+      margin-bottom: 0.45rem;
+      letter-spacing: 0.04em;
+    }
+    .manual-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      align-items: stretch;
+    }
+    .manual-row .manual-input { flex: 1 1 100px; min-width: 80px; }
+    .manual-row .btn          { flex-shrink: 0; align-self: stretch; }
+
+    .manual-input {
+      border: 1px solid var(--border-hi);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 0.46rem 0.55rem;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      font-size: 1rem;
+    }
+
+    /* ═══ STATS PANEL ════════════════════════════════════════ */
+    .stats-panel {
+      width: 360px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      min-height: 0;
+    }
+
+    /* Period tabs */
+    .period-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .period-tab {
+      flex: 1;
+      padding: 0.7rem 0.15rem;
+      text-align: center;
+      font-size: 0.84rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      border-bottom: 2px solid transparent;
+      transition: color 0.18s, border-color 0.18s;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      letter-spacing: 0.04em;
+    }
+    .period-tab.active { color: var(--or-bright); border-bottom-color: var(--or); }
+
+    /* Stats body */
+    .stats-body {
+      flex: 1;
+      overflow-y: auto;
+      min-height: 0;
+      -webkit-overflow-scrolling: touch;
+      padding: 1.2rem 1.05rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+    }
+    .stats-body::-webkit-scrollbar { width: 3px; }
+    .stats-body::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 2px; }
+
+    /* Hero total block */
+    .hero-block {
+      background: linear-gradient(135deg, rgba(46,30,14,0.95), rgba(30,20,12,0.95));
+      border: 1px solid #4a341a;
+      border-radius: 20px;
+      padding: 1.5rem 1rem 1.3rem;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.4), inset 0 0 36px rgba(232,133,58,0.08);
+    }
+    .hero-block::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(217,118,38,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-cell { text-align: center; position: relative; }
+    .hero-block { min-height: 120px; }
+    .hero-val {
+      font-family: 'Inter', 'Tiro Devanagari Hindi', serif;
+      font-size: 3rem;
+      color: var(--gold);
+      line-height: 1;
+      text-shadow: 0 0 24px rgba(245,200,66,0.35);
+    }
+    .hero-lbl {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin-top: 0.3rem;
+      letter-spacing: 0.1em;
+    }
+    .hero-divider { width: 1px; height: 42px; background: var(--border-hi); flex-shrink: 0; }
+
+    /* Single-name stats card */
+    .swami-card {
+      background: linear-gradient(160deg, rgba(38,24,10,0.97), rgba(22,14,7,0.97));
+      border: 1px solid rgba(240,149,53,0.28);
+      border-radius: 16px;
+      padding: 1rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .swami-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 16px; right: 16px;
+      height: 1.5px;
+      border-radius: 0 0 2px 2px;
+      background: linear-gradient(90deg, transparent, var(--or-bright), transparent);
+    }
+    .sc-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-top: 0.1rem;
+    }
+    .sc-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--or-bright);
+      box-shadow: 0 0 8px var(--or);
+      flex-shrink: 0;
+    }
+    .sc-name {
+      font-family: 'Tiro Devanagari Hindi', serif;
+      font-size: 0.95rem;
+      color: var(--text-mid);
+    }
+    .sc-stats-row {
+      display: flex;
+      gap: 0.6rem;
+    }
+    .sc-stat {
+      flex: 1;
+      background: rgba(6, 4, 2, 0.52);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.7rem 0.55rem 0.6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .sc-val {
+      font-family: 'Inter', 'Tiro Devanagari Hindi', serif;
+      font-size: 1.95rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .sc-val-malas { color: var(--or-bright); }
+    .sc-val-jap   { color: var(--gold); }
+    .sc-lbl {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      margin-top: 0.2rem;
+    }
+    .num-stable {
+      font-variant-numeric: tabular-nums lining-nums;
+      font-feature-settings: "tnum" 1, "lnum" 1;
+    }
+
+    /* Empty state */
+    .stats-empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      min-height: 180px;
+      color: var(--text-ghost);
+      font-size: 0.78rem;
+      text-align: center;
+      gap: 0.5rem;
+      line-height: 1.9;
+    }
+    .stats-empty .om {
+      font-family: 'Tiro Devanagari Hindi', serif;
+      font-size: 2rem;
+      margin-bottom: 0.1rem;
+      color: var(--text-ghost);
+    }
+
+    /* Stats footer */
+    .stats-footer {
+      flex-shrink: 0;
+      padding: 0.65rem 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+    }
+    .btn-danger {
+      padding: 0.52rem 1.35rem;
+      font-size: 0.88rem;
+      border-radius: 20px;
+      border: 1px solid #7d1d1d;
+      background: linear-gradient(135deg, #6b1515, #8f1e1e);
+      color: #ffe3df;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: 'Noto Sans Devanagari', sans-serif;
+      transition: transform 0.18s, filter 0.18s, box-shadow 0.18s;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 8px 18px rgba(122, 20, 20, 0.35);
+    }
+    .btn-danger:hover { transform: translateY(-1px); filter: brightness(1.08); }
+
+    /* Clear-scope menu */
+    .clear-menu {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 1000;
+      padding: 1rem;
+    }
+    .clear-menu.open { display: flex; }
+    .clear-card {
+      width: min(420px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border-hi);
+      border-radius: 14px;
+      padding: 1rem;
+    }
+    .clear-options { display: grid; gap: 0.45rem; margin-top: 0.75rem; }
+    .clear-options .btn { width: 100%; text-align: left; }
+
+    /* Custom confirm / alert modal */
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.78);
+      z-index: 1100;
+      padding: 1rem;
+    }
+    .confirm-overlay.open { display: flex; }
+    .confirm-inner {
+      width: min(360px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border-hi);
+      border-radius: 14px;
+      padding: 1.4rem 1.2rem 1.1rem;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.6);
+      animation: modal-in 0.18s ease;
+    }
+    @keyframes modal-in {
+      from { opacity: 0; transform: scale(0.95) translateY(6px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .confirm-msg {
+      font-size: 0.92rem;
+      color: var(--text);
+      line-height: 1.6;
+      margin-bottom: 1.2rem;
+      white-space: pre-line;
+    }
+    .confirm-btns {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+    }
+
+    /* Flash */
+    #flash {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 999;
+      border: 2px solid var(--or);
+      opacity: 0;
+      will-change: opacity;
+    }
+    .flash-on { animation: do-flash 0.65s ease-out forwards; }
+    @keyframes do-flash {
+      0%  { opacity: 0; }
+      18% { opacity: 0.55; }
+      100%{ opacity: 0; }
+    }
+
+    /* ═══ MOBILE NAV ════════════════════════════════════════ */
+    .mobile-nav { display: none; }
+
+    /* ═══ RESPONSIVE — MOBILE (≤768px) ══════════════════════ */
+    @media (max-width: 768px) {
+      body { overflow: hidden; }
+      .main {
+        flex-direction: column;
+        position: relative;
+      }
+      .japa-panel, .stats-panel {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        border-right: none;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        display: none !important;
+      }
+      .japa-panel {
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 1rem 1rem 1.4rem;
+      }
+      .stats-panel { width: 100%; }
+      .japa-panel.mob-active   { display: flex !important; }
+      .stats-panel.mob-active  { display: flex !important; }
+
+      .ring-wrapper  { width: 252px; height: 252px; }
+      .name-display  { font-size: 1.5rem;  margin-bottom: 0.6rem; }
+      .count-number  { font-size: 2.6rem; }
+      .session-row   { gap: 1rem;  margin-top: 0.85rem; }
+      .s-val         { font-size: 1.4rem; }
+      .controls      { margin-top: 0.75rem; }
+      .kbd-hint      { display: none; }
+
+      .stats-body    { padding: 0.9rem 0.85rem; }
+      .hero-val      { font-size: 2.3rem; }
+      .sc-val        { font-size: 1.5rem; }
+      .sc-name       { font-size: 0.85rem; }
+      .period-tab    { font-size: 0.76rem; padding: 0.72rem 0.1rem; }
+
+      .manual-log    { width: 100%; }
+
+      .mobile-nav {
+        display: flex;
+        flex-shrink: 0;
+        border-top: 1px solid var(--border);
+        background: var(--bg);
+        position: relative;
+        z-index: 10;
+      }
+      .mob-btn {
+        flex: 1;
+        padding: 0.68rem 0.5rem 0.52rem;
+        display: flex; flex-direction: column; align-items: center; gap: 0.16rem;
+        border: none;
+        background: transparent;
+        color: var(--text-dim);
+        cursor: pointer;
+        font-family: 'Noto Sans Devanagari', sans-serif;
+        font-size: 0.63rem;
+        border-top: 2px solid transparent;
+        transition: color 0.18s, border-color 0.18s;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+      }
+      .mob-btn.active { color: var(--or-bright); border-top-color: var(--or); }
+      .mob-icon { font-size: 1rem; line-height: 1; }
+    }
+
+    /* ═══ RESPONSIVE — DESKTOP (>768px) ════════════════════ */
+    @media (min-width: 769px) {
+      .ring-wrapper {
+        width:  clamp(300px, 44vh, 520px);
+        height: clamp(300px, 44vh, 520px);
+      }
+      .japa-panel::before {
+        width:  clamp(480px, 66vh, 820px);
+        height: clamp(480px, 66vh, 820px);
+      }
+      .name-display  { font-size: clamp(1.8rem, 2.8vh, 3rem); margin-bottom: clamp(0.8rem, 1.3vh, 1.4rem); }
+      .count-number  { font-size: clamp(3.4rem, 5.2vh, 5.6rem); }
+      .count-denom   { font-size: clamp(0.95rem, 1.3vh, 1.25rem); margin-top: 0.3rem; }
+      .tap-cue       { font-size: clamp(0.9rem, 1.2vh, 1.06rem);  margin-top: clamp(0.6rem, 1vh, 1rem); }
+      .session-row   { gap: clamp(1.4rem, 2.4vh, 2.8rem); margin-top: clamp(1rem, 1.6vh, 1.8rem); }
+      .s-val         { font-size: clamp(1.7rem, 2.6vh, 3rem); }
+      .s-lbl         { font-size: clamp(0.8rem, 1vh, 0.95rem); margin-top: 0.28rem; }
+      .s-sep         { height: clamp(1.8rem, 2.8vh, 3rem); }
+      .controls      { gap: clamp(0.5rem, 0.8vh, 0.85rem); margin-top: clamp(0.85rem, 1.3vh, 1.5rem); }
+      .btn           { font-size: clamp(0.88rem, 1.15vh, 1.05rem); padding: clamp(0.42rem, 0.62vh, 0.62rem) clamp(1.05rem, 1.5vh, 1.5rem); }
+      .kbd-hint      { font-size: clamp(0.72rem, 0.9vh, 0.88rem); margin-top: clamp(0.55rem, 0.85vh, 0.95rem); }
+      .hero-val      { font-size: clamp(2.8rem, 4.2vh, 4.8rem); }
+      .stats-panel   { width: clamp(340px, 30vw, 430px); }
+    }
+
+    * { scrollbar-width: thin; scrollbar-color: var(--border-hi) transparent; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-title">॥ श्री स्वामी समर्थ ॥</div>
+  <div class="hdr-sub">नाम जप</div>
+</header>
+
+<div class="main" id="mainArea">
+
+  <!-- ══════════ JAPA PANEL ══════════ -->
+  <div class="japa-panel" id="japaPanel">
+
+    <div class="name-display">श्री स्वामी समर्थ</div>
+
+    <div class="ring-wrapper" id="ringWrapper"
+         role="button" tabindex="0" aria-label="जप करें">
+      <svg class="ring-svg" id="malaSvg" viewBox="-155 -155 310 310" xmlns="http://www.w3.org/2000/svg">
+        <circle class="ring-track" cx="0" cy="0" r="136"/>
+      </svg>
+      <div class="ring-center">
+        <div class="count-number num-stable" id="countNum">0</div>
+        <div class="count-denom" id="countDenom">/ 108</div>
+        <div class="tap-cue">◉ यहाँ स्पर्श करें</div>
+      </div>
+    </div>
+
+    <div class="session-row">
+      <div class="s-stat">
+        <div class="s-val num-stable" id="todayMalas">0</div>
+        <div class="s-lbl">आज माला</div>
+      </div>
+      <div class="s-sep"></div>
+      <div class="s-stat">
+        <div class="s-val num-stable" id="todayCount">0</div>
+        <div class="s-lbl">आज जप</div>
+      </div>
+      <div class="s-sep"></div>
+      <div class="s-stat">
+        <div class="s-val num-stable" id="allMalas">0</div>
+        <div class="s-lbl">कुल माला</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn" onclick="undoCount()">← पिछला</button>
+      <button class="btn" onclick="resetCurrent()">रीसेट</button>
+      <button class="btn" id="manualToggleBtn" onclick="toggleManualLog()">+ मैनुअल जोड़ें</button>
+    </div>
+
+    <div class="manual-log" id="manualLog">
+      <div class="manual-title">मैनुअल लॉग जोड़ें</div>
+      <div class="manual-row">
+        <select id="manualType" class="manual-input">
+          <option value="japa">जप</option>
+          <option value="mala">माला</option>
+        </select>
+        <input id="manualValue" class="manual-input" type="number" min="1" step="1" placeholder="संख्या">
+        <button class="btn primary" onclick="addManualLog()">जोड़ें</button>
+      </div>
+    </div>
+
+    <div class="kbd-hint">स्पेस — एक जप &nbsp;·&nbsp; Z — पिछला &nbsp;·&nbsp; R — रीसेट</div>
+  </div>
+
+  <!-- ══════════ STATS PANEL ══════════ -->
+  <div class="stats-panel" id="statsPanel">
+
+    <div class="period-tabs">
+      <button class="period-tab active" id="pt-today" onclick="setPeriod('today')">आज</button>
+      <button class="period-tab"        id="pt-week"  onclick="setPeriod('week')">सप्ताह</button>
+      <button class="period-tab"        id="pt-month" onclick="setPeriod('month')">माह</button>
+      <button class="period-tab"        id="pt-all"   onclick="setPeriod('all')">सर्वकाल</button>
+    </div>
+
+    <div class="stats-body" id="statsBody"></div>
+
+    <div class="stats-footer">
+      <button class="btn-danger" onclick="openClearMenu()">डेटा साफ़ करें</button>
+    </div>
+
+  </div>
+
+</div><!-- .main -->
+
+<!-- Mobile bottom nav -->
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mob-btn active" id="mn-japa"  onclick="showTab('japa')">
+    <span class="mob-icon">📿</span>जप
+  </button>
+  <button class="mob-btn"        id="mn-stats" onclick="showTab('stats')">
+    <span class="mob-icon">✦</span>आँकड़े
+  </button>
+</nav>
+
+<div id="flash"></div>
+
+<!-- Clear-scope overlay -->
+<div class="clear-menu" id="clearMenu" onclick="closeClearMenu(event)">
+  <div class="clear-card">
+    <div class="manual-title">कौन-सा डेटा हटाना है?</div>
+    <div class="clear-options">
+      <button class="btn" onclick="clearData('today')">आज का डेटा हटाएँ</button>
+      <button class="btn" onclick="clearData('week')">साप्ताहिक डेटा हटाएँ</button>
+      <button class="btn" onclick="clearData('month')">मासिक डेटा हटाएँ</button>
+      <button class="btn btn-danger" onclick="clearData('all')">सर्वकाल डेटा हटाएँ</button>
+      <button class="btn" onclick="closeClearMenu()">रद्द करें</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm / alert modal -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-inner">
+    <div class="confirm-msg" id="confirmMsg"></div>
+    <div class="confirm-btns">
+      <button class="btn"     id="confirmCancelBtn" onclick="_doModalCancel()">रद्द करें</button>
+      <button class="btn primary" id="confirmOkBtn" onclick="_doModalOk()">ठीक है</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════
+// CONSTANTS & STATE
+// ════════════════════════════════════════════════════════════
+const NAME_KEY_SWAMI = 'swami';
+const MALA_SIZE      = 108;
+const STORE_KEY      = 'ssJpDailyV1';
+const BEAD_KEY       = 'ssBead';
+const BEAD_DATE_KEY  = 'ssBeadDate';
+
+let beadCount    = 0;
+let activePeriod = 'today';
+
+// ════════════════════════════════════════════════════════════
+// STORAGE
+// ════════════════════════════════════════════════════════════
+let _cache = null;
+
+function getLog() {
+  if (_cache) return _cache;
+  try { _cache = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); }
+  catch { _cache = {}; }
+  return _cache;
+}
+function setLog(data) {
+  _cache = data;
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+}
+
+function calcMalas(count) {
+  return Math.floor(Math.max(0, Number(count) || 0) / MALA_SIZE);
+}
+
+function normalizeDayRecord(rec) {
+  if (!rec[NAME_KEY_SWAMI]) rec[NAME_KEY_SWAMI] = { count: 0, malas: 0 };
+  rec[NAME_KEY_SWAMI].count = Math.max(0, Number(rec[NAME_KEY_SWAMI].count) || 0);
+  rec[NAME_KEY_SWAMI].malas = calcMalas(rec[NAME_KEY_SWAMI].count);
+}
+
+function normalizeLogData() {
+  const data = getLog();
+  let changed = false;
+  for (const rec of Object.values(data)) {
+    const before = rec?.swami?.count;
+    normalizeDayRecord(rec);
+    if (before !== rec.swami.count) changed = true;
+  }
+  if (changed) setLog(data);
+}
+
+function saveBead() {
+  localStorage.setItem(BEAD_KEY, beadCount);
+  localStorage.setItem(BEAD_DATE_KEY, todayStr());
+}
+
+function addJapa(count) {
+  const data = getLog();
+  const d    = todayStr();
+  if (!data[d]) data[d] = { swami: { count: 0, malas: 0 } };
+  if (!data[d].swami) data[d].swami = { count: 0, malas: 0 };
+  data[d].swami.count += count;
+  data[d].swami.malas  = calcMalas(data[d].swami.count);
+  setLog(data);
+}
+
+function applyJapaDelta(date, countDelta) {
+  const data = getLog();
+  if (!data[date]) data[date] = { swami: { count: 0, malas: 0 } };
+  if (!data[date].swami) data[date].swami = { count: 0, malas: 0 };
+  data[date].swami.count = Math.max(0, (Number(data[date].swami.count) || 0) + countDelta);
+  data[date].swami.malas = calcMalas(data[date].swami.count);
+  setLog(data);
+}
+
+// ════════════════════════════════════════════════════════════
+// DATE HELPERS
+// ════════════════════════════════════════════════════════════
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function weekStartStr() {
+  const d   = new Date();
+  const dow = d.getDay();
+  const off = (dow === 0) ? -6 : 1 - dow;
+  const m   = new Date(d.getFullYear(), d.getMonth(), d.getDate() + off);
+  return `${m.getFullYear()}-${pad(m.getMonth()+1)}-${pad(m.getDate())}`;
+}
+function monthStartStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-01`;
+}
+
+// ════════════════════════════════════════════════════════════
+// AGGREGATION
+// ════════════════════════════════════════════════════════════
+function getStats() {
+  const data   = getLog();
+  const r      = { count: 0, malas: 0 };
+  const todayS = todayStr();
+  const boundS = activePeriod === 'week'  ? weekStartStr()
+               : activePeriod === 'month' ? monthStartStr()
+               : null;
+
+  for (const [date, rec] of Object.entries(data)) {
+    if (activePeriod === 'today' && date !== todayS) continue;
+    if (boundS !== null && date < boundS) continue;
+    if (rec.swami) r.count += (Number(rec.swami.count) || 0);
+  }
+
+  const includesToday = activePeriod === 'today'
+    || (boundS !== null && todayS >= boundS)
+    || activePeriod === 'all';
+  if (includesToday && beadCount > 0) r.count += beadCount;
+
+  r.malas = calcMalas(r.count);
+  return r;
+}
+
+// ════════════════════════════════════════════════════════════
+// MALA RING
+// ════════════════════════════════════════════════════════════
+const beadEls = [];
+
+function buildRing() {
+  const svg = document.getElementById('malaSvg');
+  svg.querySelectorAll('.jpb').forEach(b => b.remove());
+  beadEls.length = 0;
+
+  const R = 136, r = 3.4, rS = 5.2;
+  for (let i = 0; i < MALA_SIZE; i++) {
+    const ang    = (i / MALA_SIZE) * 2 * Math.PI - Math.PI / 2;
+    const c      = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    const sumeru = (i === 0);
+    c.setAttribute('cx', (R * Math.cos(ang)).toFixed(3));
+    c.setAttribute('cy', (R * Math.sin(ang)).toFixed(3));
+    c.setAttribute('r',  sumeru ? rS : r);
+    c.setAttribute('class', `jpb ${sumeru ? 'bead-sumeru-unlit' : 'bead-unlit'}`);
+    svg.appendChild(c);
+    beadEls.push({ el: c, sumeru });
+  }
+}
+
+function refreshBeads() {
+  for (let i = 0; i < MALA_SIZE; i++) {
+    const { el, sumeru } = beadEls[i];
+    const lit = i < beadCount;
+    el.setAttribute('class', `jpb ${sumeru
+      ? (lit ? 'bead-sumeru-lit' : 'bead-sumeru-unlit')
+      : (lit ? 'bead-lit'       : 'bead-unlit')}`);
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+// DISPLAY REFRESH
+// ════════════════════════════════════════════════════════════
+function refreshDisplay() {
+  document.getElementById('countNum').textContent = beadCount;
+  refreshBeads();
+
+  const data  = getLog();
+  const today = todayStr();
+  const td    = (data[today] || {}).swami || { count: 0, malas: 0 };
+
+  let totalAllCount = 0;
+  for (const rec of Object.values(data)) {
+    if (rec.swami) totalAllCount += (Number(rec.swami.count) || 0);
+  }
+  const allMalas = calcMalas(totalAllCount + beadCount);
+
+  document.getElementById('todayMalas').textContent = fmt(calcMalas(td.count + beadCount));
+  document.getElementById('todayCount').textContent = fmt(td.count + beadCount);
+  document.getElementById('allMalas').textContent   = fmt(allMalas);
+}
+
+// ════════════════════════════════════════════════════════════
+// STATS RENDER
+// ════════════════════════════════════════════════════════════
+function renderStats() {
+  const s = getStats();
+
+  if (s.count === 0) {
+    document.getElementById('statsBody').innerHTML = `
+      <div class="stats-empty">
+        <div class="om">॥</div>
+        अभी कोई जप नहीं<br>माला आरम्भ करें
+        <span style="font-size:0.56rem;color:var(--text-ghost);margin-top:0.2rem">श्री स्वामी समर्थ</span>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('statsBody').innerHTML = `
+    <div class="hero-block">
+      <div class="hero-cell">
+        <div class="hero-val num-stable">${fmt(s.malas)}</div>
+        <div class="hero-lbl">कुल माला</div>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-cell">
+        <div class="hero-val num-stable">${fmt(s.count)}</div>
+        <div class="hero-lbl">कुल जप</div>
+      </div>
+    </div>
+
+    <div class="swami-card">
+      <div class="sc-header">
+        <div class="sc-dot"></div>
+        <div class="sc-name">श्री स्वामी समर्थ</div>
+      </div>
+      <div class="sc-stats-row">
+        <div class="sc-stat">
+          <div class="sc-val sc-val-malas num-stable">${fmt(s.malas)}</div>
+          <div class="sc-lbl">माला</div>
+        </div>
+        <div class="sc-stat">
+          <div class="sc-val sc-val-jap num-stable">${fmt(s.count)}</div>
+          <div class="sc-lbl">जप</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ════════════════════════════════════════════════════════════
+// CUSTOM MODAL
+// ════════════════════════════════════════════════════════════
+let _modalResolve = null;
+
+function showModal(msg, { ok = 'ठीक है', cancel = 'रद्द करें', danger = false, alertOnly = false } = {}) {
+  return new Promise(resolve => {
+    _modalResolve = resolve;
+    document.getElementById('confirmMsg').textContent = msg;
+    const okBtn     = document.getElementById('confirmOkBtn');
+    const cancelBtn = document.getElementById('confirmCancelBtn');
+    okBtn.textContent     = ok;
+    okBtn.className       = danger ? 'btn btn-danger' : 'btn primary';
+    cancelBtn.textContent = cancel;
+    cancelBtn.style.display = alertOnly ? 'none' : '';
+    document.getElementById('confirmOverlay').classList.add('open');
+  });
+}
+
+function _doModalOk() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  document.getElementById('confirmCancelBtn').style.display = '';
+  if (_modalResolve) { _modalResolve(true);  _modalResolve = null; }
+}
+
+function _doModalCancel() {
+  document.getElementById('confirmOverlay').classList.remove('open');
+  document.getElementById('confirmCancelBtn').style.display = '';
+  if (_modalResolve) { _modalResolve(false); _modalResolve = null; }
+}
+
+document.getElementById('confirmOverlay').addEventListener('click', e => {
+  if (e.target.id === 'confirmOverlay') _doModalCancel();
+});
+
+// ════════════════════════════════════════════════════════════
+// JAPA ACTIONS
+// ════════════════════════════════════════════════════════════
+function countJapa() {
+  beadCount++;
+  saveBead();
+
+  const rw = document.getElementById('ringWrapper');
+  rw.classList.remove('ring-tapped');
+  void rw.offsetWidth;
+  rw.classList.add('ring-tapped');
+
+  if (beadCount >= MALA_SIZE) {
+    addJapa(MALA_SIZE);
+    beadCount = 0;
+    saveBead();
+    doFlash();
+  }
+
+  refreshDisplay();
+  renderStats();
+}
+
+function undoCount(step = 1) {
+  if (beadCount <= 0) return;
+  beadCount = Math.max(0, beadCount - Math.max(1, step));
+  saveBead();
+  refreshDisplay();
+  renderStats();
+}
+
+async function resetCurrent() {
+  if (beadCount > 0 && !await showModal('वर्तमान जप गणना रीसेट करें?', { ok: 'रीसेट करें', danger: true })) return;
+  beadCount = 0;
+  saveBead();
+  refreshDisplay();
+  renderStats();
+}
+
+function doFlash() {
+  const f = document.getElementById('flash');
+  f.classList.remove('flash-on');
+  void f.offsetWidth;
+  f.classList.add('flash-on');
+}
+
+// ════════════════════════════════════════════════════════════
+// PERIOD SELECTION
+// ════════════════════════════════════════════════════════════
+function setPeriod(p) {
+  activePeriod = p;
+  document.querySelectorAll('.period-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`pt-${p}`).classList.add('active');
+  renderStats();
+}
+
+// ════════════════════════════════════════════════════════════
+// CLEAR DATA
+// ════════════════════════════════════════════════════════════
+function openClearMenu() {
+  document.getElementById('clearMenu').classList.add('open');
+}
+
+function closeClearMenu(e) {
+  if (e && e.target.id !== 'clearMenu') return;
+  document.getElementById('clearMenu').classList.remove('open');
+}
+
+async function clearData(scope) {
+  const prompts = {
+    today: 'आज का डेटा हटाएँ?\nयह क्रिया वापस नहीं होगी।',
+    week:  'इस सप्ताह का डेटा हटाएँ?\nयह क्रिया वापस नहीं होगी।',
+    month: 'इस माह का डेटा हटाएँ?\nयह क्रिया वापस नहीं होगी।',
+    all:   'सम्पूर्ण सर्वकाल डेटा हटाएँ?\nयह क्रिया वापस नहीं होगी।'
+  };
+  if (!await showModal(prompts[scope], { ok: 'हटाएँ', danger: true })) return;
+
+  const data       = getLog();
+  const today      = todayStr();
+  const weekStart  = weekStartStr();
+  const monthStart = monthStartStr();
+
+  if (scope === 'all') {
+    setLog({});
+    beadCount = 0;
+    saveBead();
+  } else {
+    let deletedToday = false;
+    for (const date of Object.keys(data)) {
+      const inRange = scope === 'today' ? date === today
+        : scope === 'week'  ? date >= weekStart
+        : date >= monthStart;
+      if (inRange) {
+        if (date === today) deletedToday = true;
+        delete data[date];
+      }
+    }
+    setLog(data);
+    if (deletedToday) { beadCount = 0; saveBead(); }
+  }
+  closeClearMenu();
+  refreshDisplay();
+  renderStats();
+}
+
+async function addManualLog() {
+  const type  = document.getElementById('manualType').value;
+  const value = parseInt(document.getElementById('manualValue').value, 10);
+  if (!Number.isFinite(value) || value <= 0) {
+    await showModal('कृपया सही संख्या लिखें।', { alertOnly: true });
+    return;
+  }
+
+  const countToAdd = type === 'mala' ? value * MALA_SIZE : value;
+  const combined   = beadCount + countToAdd;
+  const wholeCount = Math.floor(combined / MALA_SIZE) * MALA_SIZE;
+  const remainder  = combined % MALA_SIZE;
+
+  if (wholeCount > 0) {
+    applyJapaDelta(todayStr(), wholeCount);
+    doFlash();
+  }
+  beadCount = remainder;
+  saveBead();
+
+  document.getElementById('manualValue').value = '';
+  document.getElementById('manualLog').classList.remove('open');
+  refreshDisplay();
+  renderStats();
+}
+
+function toggleManualLog() {
+  document.getElementById('manualLog').classList.toggle('open');
+}
+
+// ════════════════════════════════════════════════════════════
+// MOBILE TAB SWITCHING
+// ════════════════════════════════════════════════════════════
+function showTab(tab) {
+  const isJapa = (tab === 'japa');
+  document.getElementById('japaPanel').classList.toggle('mob-active',  isJapa);
+  document.getElementById('statsPanel').classList.toggle('mob-active', !isJapa);
+  document.getElementById('mn-japa').classList.toggle('active',  isJapa);
+  document.getElementById('mn-stats').classList.toggle('active', !isJapa);
+}
+
+// ════════════════════════════════════════════════════════════
+// RESPONSIVE
+// ════════════════════════════════════════════════════════════
+function applyLayout() {
+  const mobile = window.innerWidth <= 768;
+  const jp  = document.getElementById('japaPanel');
+  const sp  = document.getElementById('statsPanel');
+  if (mobile) {
+    if (!jp.classList.contains('mob-active') && !sp.classList.contains('mob-active')) {
+      jp.classList.add('mob-active');
+      document.getElementById('mn-japa').classList.add('active');
+      document.getElementById('mn-stats').classList.remove('active');
+    }
+  } else {
+    jp.classList.remove('mob-active');
+    sp.classList.remove('mob-active');
+    document.getElementById('manualLog').classList.remove('open');
+    document.getElementById('mn-japa').classList.add('active');
+    document.getElementById('mn-stats').classList.remove('active');
+  }
+}
+
+let _resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(applyLayout, 150);
+});
+
+// ════════════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName)) return;
+  if (e.target.tagName === 'BUTTON') return;
+  if (document.getElementById('confirmOverlay').classList.contains('open')) return;
+  if (document.getElementById('clearMenu').classList.contains('open'))      return;
+  if (e.code === 'Space')             { e.preventDefault(); countJapa(); }
+  if (e.key === 'z' || e.key === 'Z') { e.preventDefault(); undoCount(); }
+  if (e.key === 'r' || e.key === 'R') { e.preventDefault(); resetCurrent(); }
+});
+
+let _ringKeyHandled = false;
+
+document.getElementById('ringWrapper').addEventListener('click', () => {
+  if (_ringKeyHandled) return;
+  countJapa();
+});
+
+document.getElementById('ringWrapper').addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'Enter') {
+    e.preventDefault();
+    e.stopPropagation();
+    _ringKeyHandled = true;
+    countJapa();
+    setTimeout(() => { _ringKeyHandled = false; }, 50);
+  }
+});
+
+// ════════════════════════════════════════════════════════════
+// UTILITY
+// ════════════════════════════════════════════════════════════
+function fmt(n) {
+  const num = Number(n);
+  if (n == null || n === '' || Number.isNaN(num)) return '0';
+  return num.toLocaleString('hi-IN');
+}
+
+// ════════════════════════════════════════════════════════════
+// SERVICE WORKER
+// ════════════════════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const basePath = location.pathname.includes('/naam-japa-counter/') ? '/naam-japa-counter/' : '/';
+    navigator.serviceWorker.register(`${basePath}sw.js`, { scope: basePath }).catch(() => {});
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════════════════════
+normalizeLogData();
+
+{
+  const savedDate = localStorage.getItem(BEAD_DATE_KEY);
+  beadCount = (savedDate === todayStr())
+    ? Math.min(MALA_SIZE - 1, Math.max(0, parseInt(localStorage.getItem(BEAD_KEY) || '0', 10)))
+    : 0;
+  if (savedDate !== todayStr()) saveBead();
+}
+
+document.getElementById('countDenom').textContent = `/ ${MALA_SIZE}`;
+buildRing();
+applyLayout();
+refreshDisplay();
+renderStats();
+</script>
+</body>
+</html>
