@@ -1259,7 +1259,7 @@ function fmt(n) {
 // ════════════════════════════════════════════════════════════
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    const basePath = location.pathname.includes('/naam-japa-counter/') ? '/naam-japa-counter/' : '/';
+    const basePath = location.pathname.includes('/Shri-Swami-Naam-Japa/') ? '/Shri-Swami-Naam-Japa/' : '/';
     navigator.serviceWorker.register(`${basePath}sw.js`, { scope: basePath }).catch(() => {});
   });
 }

@@ -1,5 +1,5 @@
-const CACHE = 'naam-japa-v4';
-const BASE = self.location.pathname.includes('/naam-japa-counter/') ? '/naam-japa-counter' : '';
+const CACHE = 'swami-naam-japa-v1';
+const BASE = self.location.pathname.includes('/Shri-Swami-Naam-Japa/') ? '/Shri-Swami-Naam-Japa' : '';
 const ASSETS = [
   BASE + '/',
   BASE + '/index.html',
